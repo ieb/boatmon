@@ -11,13 +11,14 @@ import asyncio
 from meter_api import Collector
 
 class P8SMetricsMeter(Collector):
-    def __init__(self):
+    def __init__(self, version):
         self.metrics = {
             'p8s.sent': 0,
             'p8s.exception': 0,
             'p8s.fail': 0,
             'p8s.ok': 0,
         }
+        self.version = version
 
     def inc(self, key):
         try:
@@ -27,22 +28,24 @@ class P8SMetricsMeter(Collector):
     def collect(self, source):
         now = time.time()
         nowSeconds = int(now)
+
         metrics = []
         for fieldName, value in self.metrics.items():
             metrics.append(f'{fieldName}={value}')
-        return [ f've_p8s,source={source} {",".join(metrics)} {nowSeconds}000000000' ]
 
- 
+        return [ f've_p8s,source={source},version={self.version} {",".join(metrics)} {nowSeconds}000000000' ]
+
+
 
 class P8sWriter:
 
-    def __init__(self, source, collector, config: dict, delay: float):
+    def __init__(self, source, version, collector, config: dict, delay: float):
         self.collector = collector
         self.source = source
         self.url = config['url']
         self.userId = config['userId']
         self.apiKey = config['apiKey']
-        self.metrics = P8SMetricsMeter()
+        self.metrics = P8SMetricsMeter(version)
         self.debug = 0
         self.delay = delay
         self.running = False
