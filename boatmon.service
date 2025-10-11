@@ -1,0 +1,14 @@
+[Unit]
+Description=Boatmon Service
+After=time-sync.target
+
+[Service]
+ExecStart=/home/ieb/.local/bin/uv run main.py
+WorkingDirectory=/home/ieb/boatmon
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=ieb
+
+[Install]
+WantedBy=multi-user.target

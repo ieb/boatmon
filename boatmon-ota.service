@@ -1,0 +1,15 @@
+[Unit]
+Description=Boatmon OTA Update
+After=time-sync.target
+
+[Service]
+ExecStart=/bin/bash /home/ieb/boatmon/update.sh
+WorkingDirectory=/home/ieb/boatmon
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=300s
+User=ieb
+
+[Install]
+WantedBy=multi-user.target

@@ -75,14 +75,18 @@ Install UV in the user space (not root)
     }
     EOF
 
-##
+## Install services
 
-Copy `solarmon.service` to `/etc/systemd/system`
 
     sudo cp boatmon.service /etc/systemd/system
     sudo systemctl start boatmon
-    suso systemctl enable boatmon
-    suso systemctl status boatmon    
+    sudo systemctl enable boatmon
+    sudo systemctl status boatmon    
+
+    sudo cp boatmon-ota.service /etc/systemd/system
+    sudo systemctl start boatmon-ota
+    sudo systemctl enable boatmon-ota
+    sudo systemctl status boatmon-ota    
 
 
 
@@ -91,8 +95,8 @@ Copy `solarmon.service` to `/etc/systemd/system`
 * [x] hwclock
 * [x] convert to asyncio
 * [x] send data to grafana
-* [ ] Implement service
-* [ ] Implement OTA updates
+* [x] Implement service
+* [x] Implement OTA updates
 * [ ] move bme280 off board
 
 
