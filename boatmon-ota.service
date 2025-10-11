@@ -1,6 +1,10 @@
 [Unit]
 Description=Boatmon OTA Update
 After=time-sync.target
+# allow a max of 5 restarts in 300s to protect against update failures
+# this will effectively make the restarts unlimited once evry 300s
+StartLimitBurst=10
+StartLimitIntervalSec=300
 
 [Service]
 ExecStart=/bin/bash /home/ieb/boatmon/update.sh

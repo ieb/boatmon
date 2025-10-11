@@ -15,13 +15,20 @@ Start with latest 64bit image on a Pi 3 B+ or later
 Check that they all respond 
     i2cdetect -y 1
 
-## enable hw interfaces
+## raspi-config Config
 
-* sudo raspi-config 
+To setup
+
+    sudo raspi-config 
+
 ** Interface Options -> enable i2c, 1w
-** Performance Options -> enable overlay once setup is complete. 
 ** enable cli at start
 ** Advanced Options -> Set logging to volatile to minimise disk io
+
+After setup, enable the overlay filesystem so that the flash drive does not fail
+
+** Performance Options -> enable overlay once setup is complete. 
+
 
 ## RTC
 
@@ -88,7 +95,9 @@ Install UV in the user space (not root)
     sudo systemctl enable boatmon-ota
     sudo systemctl status boatmon-ota    
 
+## OTA Updates
 
+Installations will pull ota updates via git pull. Should they fail and cause a restart of the main service repeatedly then the device will restart and reset the filesystem to a known working state to allow remote fixes. Not tested. A more complex blue green ota setup would have protected against this, but this is good enough for the moment.
 
 
 # todo
