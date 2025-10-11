@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 
 NAME = os.path.basename(__file__)
-VERSION = subprocess.run(["git", "rev-parse", "--short=8",  "HEAD"], capture_output=True, text=True).stdout.strip()
+VERSION = subprocess.run(["git", "rev-parse",  "HEAD"], capture_output=True, text=True).stdout.strip()
 
 
 
