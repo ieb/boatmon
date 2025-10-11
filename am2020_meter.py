@@ -56,9 +56,9 @@ class AM2020(Reader, Collector):
         now = time.time()
         nowSeconds = int(now)
         metrics = []
-        if self.temperature != 200:
+        if self.temperature < 200:
             metrics.append(f'temperature={self.temperature:.1f}')
-        if self.humidity != 200:
+        if self.humidity < 200:
             metrics.append(f'humidity={self.humidity:.1f}')
         self.temperature = 200
         self.humidity = 200
