@@ -2,15 +2,17 @@
 
 Uses a Raspberry Pi to remotely montor temperature and humdity sending metrics to a Grafana Cloud account, keeping below the free limit.
 
+Below are my notes to reproduce to the setup.
+
 # Pi Setup
 
 Start with latest 64bit image on a Pi 3 B+ or later
 
 ## I2c sensors
 
-* AD2020  address 5c
-* BME280  address 7
-* DS3231 only if the network connection is not reliable on boot and ntp fails
+* AD2020  address 5c  - allegedly not very accurate, but measurements indicate its stable
+* BME280  address 7  - Do not mount close to the pi as if its warmed the humidity readings will be way out.
+* DS3231 only if the network connection is not reliable on boot and ntp fails. TBH, needed since some parts do depend on time.
 
 Check that they all respond 
     i2cdetect -y 1
@@ -29,6 +31,31 @@ After setup, enable the overlay filesystem so that the flash drive does not fail
 
 ** Performance Options -> enable overlay once setup is complete. 
 
+Also disabled gui login, turned off splash screen (cmdline.txt)
+
+    sudo touch /etc/cloud/cloud-init.disabled
+    sudo mount -o rw,remount /dev/mmcblk0p1 /boot/firmware
+    sudo vi /boot/firmware/cmdline.txt
+
+## Recovery from a bootloop
+
+If the pi goes into a bootloop, mount the boot fs (fat) on a different machine and add init=/bin/bash to the end of the command line to boot into bash. The root file system has some flags that block it from being mounted on older kernels (bad superblock, but its not). Once booted into bash, you can remount rw, fix the boot loop problem (eg a service is restarting fast enough to cause a reboot), remove the init=/bin/bash from the command line and reboot.
+
+eg
+
+    # mount root rw
+    mount -o rw,remount /dev/mmcblk0p2 /
+    # fix bootloop
+    vi /etc/systemd/services/boatmon.service
+    # mount boot fs rw
+    mount /dev/mmcblk0p2 /mnt
+    # remove init=/bin/bash
+    vi /mnt/cmdline.txt   
+    sync 
+    sync
+    exit
+
+The last exit will cause a kernel panic just power down and up again. Since init is not runnng, shutdown -r does not work.
 
 ## RTC
 
@@ -79,6 +106,11 @@ Install UV in the user space (not root)
        "apiKey": "<your api key>",
        "url": "https://<your influx host>/api/v1/push/influx/write"
      },
+     "loki": {
+       "userId" : "199994",
+       "apiKey": "<your api key>",
+       "url": "https://<your loki host>/loki/api/v1/push"
+     },
     }
     EOF
 
@@ -127,4 +159,3 @@ test commit
 after after overlay fs enabled - 11/10/2025 12:05
 
 
-test after over

@@ -77,11 +77,12 @@ class StreamJournalLogs:
                     # and allows for any delay in restart of the service
                     log.debug(f'skip {message}') 
                     return
-                parts[0] = str(int(float(parts[0])*1000000000))
+                parts[0] = str(int(messageTime*1000000000))
                 self.lastTimeStamp = parts[0]
             except:
                 parts[0] = self.lastTimeStamp
                 log.debug('parse fail')
+            log.debug(f'append {parts}')
             self.lines.append(parts)
 
     async def streamLines(self):
@@ -111,7 +112,7 @@ class StreamJournalLogs:
                     message = line
                     # send the lines if more than 10
                     if len(self.lines) > 10:
-                        log.info(f'writing lines {len(self.lines)}')
+                        log.debug(f'writing lines {len(self.lines)}')
                         await self.sendLines()
             except asyncio.TimeoutError:
                 # no update after 10s
