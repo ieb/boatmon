@@ -1,20 +1,20 @@
 [Unit]
-Description=Boatmon Service
+Description=Logship Service
 After=time-sync.target
 # allow a max of 5 restarts in 300s to protect against update failures
 # since a reboot resets the filesystem it will return to a known safe 
 # state allowing a OTA update to fix
-StartLimitBurst=10
-StartLimitIntervalSec=300
-StartLimitAction=reboot
+#StartLimitBurst=10
+#StartLimitIntervalSec=300
+#StartLimitAction=reboot
 
 [Service]
-ExecStart=/home/ieb/boatmon/.venv/bin/python3 main.py
+ExecStart=/home/ieb/boatmon/.venv/bin/python3 shiplogs.py
 WorkingDirectory=/home/ieb/boatmon
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-RestartSec=10s
+RestartSec=30s
 User=ieb
 
 [Install]
