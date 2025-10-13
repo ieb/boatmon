@@ -8,3 +8,4 @@ wheels/
 secrets.json
 # Virtual environments
 .venv
+toloki
