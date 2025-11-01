@@ -1,0 +1,21 @@
+[Unit]
+Description=Boatmon Service
+After=time-sync.target
+# allow a max of 5 restarts in 300s to protect against update failures
+# since a reboot resets the filesystem it will return to a known safe 
+# state allowing a OTA update to fix
+StartLimitBurst=10
+StartLimitIntervalSec=300
+StartLimitAction=reboot
+
+[Service]
+ExecStart=/bin/bash  /home/ieb/boatmon/recovernetwork.sh
+WorkingDirectory=/home/ieb/boatmon
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=10s
+User=root
+
+[Install]
+WantedBy=multi-user.target
