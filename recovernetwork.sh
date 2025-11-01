@@ -5,7 +5,7 @@ do
 
   if [ $? -ne 0 ]; then
     echo "Internet down, restarting NetworkManager..."
-    echo systemctl restart NetworkManager
+    systemctl restart NetworkManager
   fi
   sleep 120
 done
